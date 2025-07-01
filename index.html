@@ -1,24 +1,89 @@
+
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ongles-rendezvous-facile</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prothésie Ongulaire - Réservation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Prothésie Ongulaire</h1>
+            <p class="subtitle">Choisissez votre prestation et prenez rendez-vous facilement</p>
+        </header>
 
-    <meta property="og:title" content="ongles-rendezvous-facile" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+        <main class="main-content">
+            <!-- Sélection de prestation -->
+            <section class="service-selection">
+                <h2>Choisissez votre prestation</h2>
+                <div class="service-buttons">
+                    <button class="service-btn" data-service="gainage">
+                        <span class="service-icon">💅</span>
+                        <span class="service-name">Gainage</span>
+                    </button>
+                    <button class="service-btn" data-service="gel-x">
+                        <span class="service-icon">✨</span>
+                        <span class="service-name">Gel-X</span>
+                    </button>
+                    <button class="service-btn" data-service="semi-permanent">
+                        <span class="service-icon">🌸</span>
+                        <span class="service-name">Semi-Permanent</span>
+                    </button>
+                </div>
+            </section>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+            <!-- Options de configuration -->
+            <section class="options-section" id="options" style="display: none;">
+                <h3>Personnalisez votre prestation</h3>
+                
+                <div class="option-group">
+                    <label for="niveau">Niveau de difficulté</label>
+                    <select id="niveau" class="select-field">
+                        <option value="">Sélectionnez un niveau</option>
+                        <option value="1">Niveau 1</option>
+                        <option value="2">Niveau 2</option>
+                        <option value="3">Niveau 3</option>
+                        <option value="4">Niveau 4</option>
+                        <option value="5">Niveau 5</option>
+                    </select>
+                </div>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+                <div class="option-group">
+                    <label for="depose">Options de dépose</label>
+                    <select id="depose" class="select-field">
+                        <option value="">Aucune dépose</option>
+                        <option value="depose">Dépose</option>
+                        <option value="depose-exterieur">Dépose Extérieur</option>
+                    </select>
+                </div>
+
+                <!-- Récapitulatif -->
+                <div class="summary-card">
+                    <div class="summary-item">
+                        <span class="summary-label">Durée estimée :</span>
+                        <span class="summary-value" id="duree">-- min</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Prix estimé :</span>
+                        <span class="summary-value" id="prix">-- €</span>
+                    </div>
+                </div>
+
+                <!-- Bouton de réservation -->
+                <button class="booking-btn" id="bookingBtn" disabled>
+                    <span class="btn-icon">📅</span>
+                    Prendre Rendez-vous
+                </button>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Prothésie Ongulaire. Tous droits réservés.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>

@@ -1,73 +1,99 @@
-# Welcome to your Lovable project
 
-## Project info
+# Site de Réservation - Prothésie Ongulaire
 
-**URL**: https://lovable.dev/projects/48478fca-ba52-4e2c-836c-59049c1b8c6f
+## Description
+Site web responsive pour un salon de prothésie ongulaire permettant aux clients de sélectionner leur prestation et de prendre rendez-vous facilement.
 
-## How can I edit this code?
+## Fonctionnalités
+- **Sélection de prestations** : Gainage, Gel-X, Semi-Permanent
+- **Configuration personnalisée** : Choix du niveau de difficulté et options de dépose
+- **Calcul en temps réel** : Affichage automatique de la durée et du prix
+- **Design responsive** : Optimisé pour mobile et desktop
+- **Redirection automatique** : Vers votre système de réservation Cal.com
 
-There are several ways of editing your application.
+## Configuration
 
-**Use Lovable**
+### Personnalisation des prestations
+Dans le fichier `script.js`, modifiez la configuration `SERVICES_CONFIG` :
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/48478fca-ba52-4e2c-836c-59049c1b8c6f) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```javascript
+const SERVICES_CONFIG = {
+    gainage: {
+        name: 'Gainage',
+        baseDuration: 90,    // Durée de base en minutes
+        basePrice: 45,       // Prix de base en euros
+        urlSlug: 'gainage'   // Partie de l'URL pour Cal.com
+    },
+    // ... autres prestations
+};
 ```
 
-**Edit a file directly in GitHub**
+### Configuration des niveaux
+Modifiez `NIVEAU_CONFIG` pour ajuster les suppléments :
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```javascript
+const NIVEAU_CONFIG = {
+    '2': { duration: 40, price: 15 }, // +40min, +15€
+    '3': { duration: 60, price: 25 }, // +60min, +25€
+    // ... autres niveaux
+};
+```
 
-**Use GitHub Codespaces**
+### URLs Cal.com
+Dans la fonction `redirectToBooking()`, modifiez l'URL de base :
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```javascript
+const baseUrl = 'https://cal.com/votre-identifiant/';
+```
 
-## What technologies are used for this project?
+Les URLs générées suivront ce format :
+- `https://cal.com/votre-identifiant/gainage-n2-depose`
+- `https://cal.com/votre-identifiant/gel-x-n3`
+- etc.
 
-This project is built with:
+## Hébergement
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Netlify
+1. Glissez-déposez le dossier du projet sur [netlify.com](https://netlify.com)
+2. Votre site sera automatiquement déployé
 
-## How can I deploy this project?
+### Vercel
+1. Connectez votre repository GitHub à [vercel.com](https://vercel.com)
+2. Le déploiement se fait automatiquement
 
-Simply open [Lovable](https://lovable.dev/projects/48478fca-ba52-4e2c-836c-59049c1b8c6f) and click on Share -> Publish.
+### GitHub Pages
+1. Créez un repository GitHub
+2. Uploadez les fichiers
+3. Activez GitHub Pages dans les paramètres
 
-## Can I connect a custom domain to my Lovable project?
+## Structure des fichiers
+- `index.html` - Structure HTML principale
+- `styles.css` - Styles CSS avec design responsive
+- `script.js` - Logique JavaScript et calculs
+- `README.md` - Documentation
 
-Yes, you can!
+## Personnalisation du design
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Couleurs
+Les couleurs sont définies dans `:root` dans `styles.css` :
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+```css
+:root {
+    --primary-color: #E8B4B8;     /* Rose principal */
+    --secondary-color: #F5D2D7;   /* Rose secondaire */
+    --accent-color: #D4A5A5;      /* Rose accent */
+    /* ... */
+}
+```
+
+### Icônes
+Les icônes emoji peuvent être remplacées dans `index.html` :
+
+```html
+<span class="service-icon">💅</span> <!-- Gainage -->
+<span class="service-icon">✨</span> <!-- Gel-X -->
+<span class="service-icon">🌸</span> <!-- Semi-Permanent -->
+```
+
+## Support
+Pour toute question ou personnalisation, consultez la documentation ou contactez votre développeur.
