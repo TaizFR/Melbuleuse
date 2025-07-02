@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -36,15 +37,10 @@
                         <span class="service-name">Gainage</span>
                         <span class="service-price">45€</span>
                     </button>
-                    <button class="service-btn" data-service="gel-x-sml" aria-label="Sélectionner le service Gel-X S/M/L">
+                    <button class="service-btn" data-service="gel-x" aria-label="Sélectionner le service Gel-X">
                         <span class="service-icon" aria-hidden="true">✨</span>
-                        <span class="service-name">Gel-X S/M/L</span>
-                        <span class="service-price">45€</span>
-                    </button>
-                    <button class="service-btn" data-service="gel-x-xl" aria-label="Sélectionner le service Gel-X XL">
-                        <span class="service-icon" aria-hidden="true">💎</span>
-                        <span class="service-name">Gel-X XL</span>
-                        <span class="service-price">50€</span>
+                        <span class="service-name">Gel-X</span>
+                        <span class="service-price">45€ - 50€</span>
                     </button>
                     <button class="service-btn" data-service="depose-seule" aria-label="Sélectionner le service Dépose seule">
                         <span class="service-icon" aria-hidden="true">🧹</span>
@@ -58,6 +54,16 @@
             <section class="options-section" id="options" style="display: none;" aria-live="polite">
                 <h3>Personnalisez votre prestation</h3>
                 
+                <!-- Sélection de taille Gel-X -->
+                <div class="option-group" id="taille-group" style="display: none;">
+                    <label for="taille">Taille Gel-X (obligatoire)</label>
+                    <select id="taille" class="select-field" aria-describedby="taille-help" required>
+                        <option value="">Sélectionnez une taille</option>
+                        <option value="sml">S / M / L (45€)</option>
+                        <option value="xl">XL (50€)</option>
+                    </select>
+                </div>
+
                 <div class="option-group" id="niveau-group">
                     <label for="niveau">Nail Art Niveau (obligatoire)</label>
                     <select id="niveau" class="select-field" aria-describedby="niveau-help" required>
