@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -47,6 +46,11 @@
                         <span class="service-name">Gel-X XL</span>
                         <span class="service-price">50€</span>
                     </button>
+                    <button class="service-btn" data-service="depose-seule" aria-label="Sélectionner le service Dépose seule">
+                        <span class="service-icon" aria-hidden="true">🧹</span>
+                        <span class="service-name">Dépose seule</span>
+                        <span class="service-price">20€</span>
+                    </button>
                 </div>
             </section>
 
@@ -54,7 +58,7 @@
             <section class="options-section" id="options" style="display: none;" aria-live="polite">
                 <h3>Personnalisez votre prestation</h3>
                 
-                <div class="option-group">
+                <div class="option-group" id="niveau-group">
                     <label for="niveau">Nail Art Niveau (obligatoire)</label>
                     <select id="niveau" class="select-field" aria-describedby="niveau-help" required>
                         <option value="">Sélectionnez un niveau</option>
@@ -66,13 +70,12 @@
                     </select>
                 </div>
 
-                <div class="option-group">
+                <div class="option-group" id="depose-group">
                     <label for="depose">Options de dépose (optionnel)</label>
                     <select id="depose" class="select-field" aria-describedby="depose-help">
                         <option value="">Aucune dépose</option>
                         <option value="depose">Dépose (+5€)</option>
                         <option value="depose-exterieur">Dépose Extérieur (+5€)</option>
-                        <option value="depose-seule">Dépose seule (20€)</option>
                     </select>
                 </div>
 

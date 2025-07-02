@@ -4,26 +4,36 @@ const SERVICES_CONFIG = {
     'semi-permanent': {
         name: 'Semi-Permanent',
         basePrice: 35,
-        urlSlug: 'semi-permanent'
+        urlSlug: 'semi-permanent',
+        requiresNailArt: true
     },
     'gainage': {
         name: 'Gainage',
         basePrice: 45,
-        urlSlug: 'gainage'
+        urlSlug: 'gainage',
+        requiresNailArt: true
     },
     'gel-x-sml': {
         name: 'Gel-X S/M/L',
         basePrice: 45,
-        urlSlug: 'gel-x-sml'
+        urlSlug: 'gel-x-sml',
+        requiresNailArt: true
     },
     'gel-x-xl': {
         name: 'Gel-X XL',
         basePrice: 50,
-        urlSlug: 'gel-x-xl'
+        urlSlug: 'gel-x-xl',
+        requiresNailArt: true
+    },
+    'depose-seule': {
+        name: 'Dépose seule',
+        basePrice: 20,
+        urlSlug: 'depose-seule',
+        requiresNailArt: false
     }
 };
 
-// Configuration des niveaux de Nail Art (obligatoire)
+// Configuration des niveaux de Nail Art (obligatoire sauf pour dépose seule)
 const NIVEAU_CONFIG = {
     '1': { price: 10 },
     '2': { price: 15 },
@@ -35,8 +45,7 @@ const NIVEAU_CONFIG = {
 // Configuration des options de dépose
 const DEPOSE_CONFIG = {
     'depose': { price: 5 },
-    'depose-exterieur': { price: 5 }, // Pour Gel-X uniquement
-    'depose-seule': { price: 20 }
+    'depose-exterieur': { price: 5 }
 };
 
 // État de l'application
@@ -99,6 +108,7 @@ function selectService(service) {
     updateServiceButtons(service);
     showOptions();
     resetOptions();
+    updateOptionsVisibility(service);
     updateDeposeOptions(service);
     updateSummary();
     updateBookingButton();
@@ -134,6 +144,23 @@ function resetOptions() {
     document.getElementById('depose').value = '';
 }
 
+function updateOptionsVisibility(service) {
+    const niveauGroup = document.getElementById('niveau-group');
+    const deposeGroup = document.getElementById('depose-group');
+    const serviceConfig = SERVICES_CONFIG[service];
+
+    if (serviceConfig.requiresNailArt) {
+        // Prestations normales : niveau obligatoire, dépose optionnelle
+        niveauGroup.style.display = 'block';
+        deposeGroup.style.display = 'block';
+        niveauGroup.querySelector('label').textContent = 'Nail Art Niveau (obligatoire)';
+    } else {
+        // Dépose seule : pas de niveau, pas de dépose supplémentaire
+        niveauGroup.style.display = 'none';
+        deposeGroup.style.display = 'none';
+    }
+}
+
 function updateDeposeOptions(service) {
     const deposeSelect = document.getElementById('depose');
     const deposeExterieureOption = deposeSelect.querySelector('option[value="depose-exterieur"]');
@@ -157,20 +184,25 @@ function updateSummary() {
     const service = SERVICES_CONFIG[currentSelection.service];
     let totalPrice = service.basePrice;
 
-    // Ajouter le prix du niveau (obligatoire)
-    if (currentSelection.niveau && NIVEAU_CONFIG[currentSelection.niveau]) {
-        const niveauData = NIVEAU_CONFIG[currentSelection.niveau];
-        totalPrice += niveauData.price;
-    }
+    // Pour la dépose seule, prix fixe
+    if (currentSelection.service === 'depose-seule') {
+        totalPrice = 20;
+    } else {
+        // Ajouter le prix du niveau (obligatoire pour les autres prestations)
+        if (currentSelection.niveau && NIVEAU_CONFIG[currentSelection.niveau]) {
+            const niveauData = NIVEAU_CONFIG[currentSelection.niveau];
+            totalPrice += niveauData.price;
+        }
 
-    // Ajouter le prix de la dépose
-    if (currentSelection.depose && DEPOSE_CONFIG[currentSelection.depose]) {
-        // Pour la dépose extérieure, ne pas ajouter le prix si ce n'est pas un service Gel-X
-        if (currentSelection.depose === 'depose-exterieur' && !currentSelection.service.includes('gel-x')) {
-            // Prix à préciser, on n'ajoute rien
-        } else {
-            const deposeData = DEPOSE_CONFIG[currentSelection.depose];
-            totalPrice += deposeData.price;
+        // Ajouter le prix de la dépose
+        if (currentSelection.depose && DEPOSE_CONFIG[currentSelection.depose]) {
+            // Pour la dépose extérieure, ne pas ajouter le prix si ce n'est pas un service Gel-X
+            if (currentSelection.depose === 'depose-exterieur' && !currentSelection.service.includes('gel-x')) {
+                // Prix à préciser, on n'ajoute rien
+            } else {
+                const deposeData = DEPOSE_CONFIG[currentSelection.depose];
+                totalPrice += deposeData.price;
+            }
         }
     }
 
@@ -188,9 +220,19 @@ function updateSummary() {
 
 function updateBookingButton() {
     const bookingBtn = document.getElementById('bookingBtn');
+    const service = SERVICES_CONFIG[currentSelection.service];
     
-    // Le bouton est activé seulement si un service et un niveau sont sélectionnés
-    const isValid = currentSelection.service && currentSelection.niveau;
+    let isValid = false;
+    
+    if (currentSelection.service) {
+        if (service.requiresNailArt) {
+            // Pour les prestations normales, niveau obligatoire
+            isValid = currentSelection.niveau !== null && currentSelection.niveau !== '';
+        } else {
+            // Pour la dépose seule, pas de niveau requis
+            isValid = true;
+        }
+    }
     
     bookingBtn.disabled = !isValid;
     
@@ -202,23 +244,29 @@ function updateBookingButton() {
 }
 
 function redirectToBooking() {
-    if (!currentSelection.service || !currentSelection.niveau) {
+    if (!currentSelection.service) {
+        return;
+    }
+
+    const service = SERVICES_CONFIG[currentSelection.service];
+    
+    // Vérifier les conditions de validation
+    if (service.requiresNailArt && (!currentSelection.niveau || currentSelection.niveau === '')) {
         return;
     }
 
     // Construire l'URL pour Cal.com
     const baseUrl = 'https://cal.com/melbuleuse/'; // Remplacez par votre identifiant Cal.com
-    const service = SERVICES_CONFIG[currentSelection.service];
     
     let urlParts = [service.urlSlug];
     
-    // Ajouter le niveau
-    if (currentSelection.niveau) {
+    // Ajouter le niveau seulement si requis et sélectionné
+    if (service.requiresNailArt && currentSelection.niveau) {
         urlParts.push(`n${currentSelection.niveau}`);
     }
     
-    // Ajouter la dépose si sélectionnée
-    if (currentSelection.depose) {
+    // Ajouter la dépose si sélectionnée (sauf pour dépose seule)
+    if (currentSelection.service !== 'depose-seule' && currentSelection.depose) {
         let deposeSlug = '';
         switch (currentSelection.depose) {
             case 'depose':
@@ -226,9 +274,6 @@ function redirectToBooking() {
                 break;
             case 'depose-exterieur':
                 deposeSlug = 'depose-ext';
-                break;
-            case 'depose-seule':
-                deposeSlug = 'depose-seule';
                 break;
         }
         if (deposeSlug) {
@@ -249,20 +294,28 @@ function logCurrentSelection() {
 }
 
 function generateBookingUrl() {
-    if (!currentSelection.service || !currentSelection.niveau) {
+    if (!currentSelection.service) {
+        return null;
+    }
+
+    const service = SERVICES_CONFIG[currentSelection.service];
+    
+    // Vérifier les conditions de validation
+    if (service.requiresNailArt && (!currentSelection.niveau || currentSelection.niveau === '')) {
         return null;
     }
 
     const baseUrl = 'https://cal.com/melbuleuse/';
-    const service = SERVICES_CONFIG[currentSelection.service];
     
     let urlParts = [service.urlSlug];
     
-    if (currentSelection.niveau) {
+    // Ajouter le niveau seulement si requis et sélectionné
+    if (service.requiresNailArt && currentSelection.niveau) {
         urlParts.push(`n${currentSelection.niveau}`);
     }
     
-    if (currentSelection.depose) {
+    // Ajouter la dépose si sélectionnée (sauf pour dépose seule)
+    if (currentSelection.service !== 'depose-seule' && currentSelection.depose) {
         let deposeSlug = '';
         switch (currentSelection.depose) {
             case 'depose':
@@ -270,9 +323,6 @@ function generateBookingUrl() {
                 break;
             case 'depose-exterieur':
                 deposeSlug = 'depose-ext';
-                break;
-            case 'depose-seule':
-                deposeSlug = 'depose-seule';
                 break;
         }
         if (deposeSlug) {
