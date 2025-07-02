@@ -1,39 +1,42 @@
 
-// Configuration des prestations avec prix et durées
+// Configuration des prestations avec prix de base
 const SERVICES_CONFIG = {
-    gainage: {
+    'semi-permanent': {
+        name: 'Semi-Permanent',
+        basePrice: 35,
+        urlSlug: 'semi-permanent'
+    },
+    'gainage': {
         name: 'Gainage',
-        baseDuration: 90,
         basePrice: 45,
         urlSlug: 'gainage'
     },
-    'gel-x': {
-        name: 'Gel-X',
-        baseDuration: 120,
-        basePrice: 60,
-        urlSlug: 'gel-x'
+    'gel-x-sml': {
+        name: 'Gel-X S/M/L',
+        basePrice: 45,
+        urlSlug: 'gel-x-sml'
     },
-    'semi-permanent': {
-        name: 'Semi-Permanent',
-        baseDuration: 60,
-        basePrice: 35,
-        urlSlug: 'semi-permanent'
+    'gel-x-xl': {
+        name: 'Gel-X XL',
+        basePrice: 50,
+        urlSlug: 'gel-x-xl'
     }
 };
 
-// Configuration des niveaux (supplément de temps et prix)
+// Configuration des niveaux de Nail Art (obligatoire)
 const NIVEAU_CONFIG = {
-    '1': { duration: 0, price: 0 },
-    '2': { duration: 40, price: 15 },
-    '3': { duration: 60, price: 25 },
-    '4': { duration: 80, price: 35 },
-    '5': { duration: 100, price: 45 }
+    '1': { price: 10 },
+    '2': { price: 15 },
+    '3': { price: 20 },
+    '4': { price: 25 },
+    '5': { price: 30 }
 };
 
 // Configuration des options de dépose
 const DEPOSE_CONFIG = {
-    'depose': { duration: 15, price: 5 },
-    'depose-exterieur': { duration: 20, price: 10 }
+    'depose': { price: 5 },
+    'depose-exterieur': { price: 5 }, // Pour Gel-X uniquement
+    'depose-seule': { price: 20 }
 };
 
 // État de l'application
@@ -96,6 +99,7 @@ function selectService(service) {
     updateServiceButtons(service);
     showOptions();
     resetOptions();
+    updateDeposeOptions(service);
     updateSummary();
     updateBookingButton();
 }
@@ -130,44 +134,53 @@ function resetOptions() {
     document.getElementById('depose').value = '';
 }
 
+function updateDeposeOptions(service) {
+    const deposeSelect = document.getElementById('depose');
+    const deposeExterieureOption = deposeSelect.querySelector('option[value="depose-exterieur"]');
+    
+    // Mettre à jour le texte de l'option "Dépose Extérieur" selon le service
+    if (service.includes('gel-x')) {
+        deposeExterieureOption.textContent = 'Dépose Extérieur (+5€)';
+    } else {
+        deposeExterieureOption.textContent = 'Dépose Extérieur (à préciser lors du RDV)';
+    }
+}
+
 function updateSummary() {
-    const dureeElement = document.getElementById('duree');
     const prixElement = document.getElementById('prix');
 
     if (!currentSelection.service) {
-        dureeElement.textContent = '-- min';
         prixElement.textContent = '-- €';
         return;
     }
 
     const service = SERVICES_CONFIG[currentSelection.service];
-    let totalDuration = service.baseDuration;
     let totalPrice = service.basePrice;
 
-    // Ajouter le supplément du niveau
+    // Ajouter le prix du niveau (obligatoire)
     if (currentSelection.niveau && NIVEAU_CONFIG[currentSelection.niveau]) {
         const niveauData = NIVEAU_CONFIG[currentSelection.niveau];
-        totalDuration += niveauData.duration;
         totalPrice += niveauData.price;
     }
 
-    // Ajouter le supplément de la dépose
+    // Ajouter le prix de la dépose
     if (currentSelection.depose && DEPOSE_CONFIG[currentSelection.depose]) {
-        const deposeData = DEPOSE_CONFIG[currentSelection.depose];
-        totalDuration += deposeData.duration;
-        totalPrice += deposeData.price;
+        // Pour la dépose extérieure, ne pas ajouter le prix si ce n'est pas un service Gel-X
+        if (currentSelection.depose === 'depose-exterieur' && !currentSelection.service.includes('gel-x')) {
+            // Prix à préciser, on n'ajoute rien
+        } else {
+            const deposeData = DEPOSE_CONFIG[currentSelection.depose];
+            totalPrice += deposeData.price;
+        }
     }
 
     // Animation de mise à jour
-    dureeElement.classList.add('updating');
     prixElement.classList.add('updating');
 
     setTimeout(() => {
-        dureeElement.textContent = `${totalDuration} min`;
         prixElement.textContent = `${totalPrice} €`;
         
         setTimeout(() => {
-            dureeElement.classList.remove('updating');
             prixElement.classList.remove('updating');
         }, 150);
     }, 150);
@@ -176,7 +189,7 @@ function updateSummary() {
 function updateBookingButton() {
     const bookingBtn = document.getElementById('bookingBtn');
     
-    // Le bouton est activé si un service et un niveau sont sélectionnés
+    // Le bouton est activé seulement si un service et un niveau sont sélectionnés
     const isValid = currentSelection.service && currentSelection.niveau;
     
     bookingBtn.disabled = !isValid;
@@ -206,8 +219,21 @@ function redirectToBooking() {
     
     // Ajouter la dépose si sélectionnée
     if (currentSelection.depose) {
-        const deposeSlug = currentSelection.depose === 'depose' ? 'depose' : 'depose-ext';
-        urlParts.push(deposeSlug);
+        let deposeSlug = '';
+        switch (currentSelection.depose) {
+            case 'depose':
+                deposeSlug = 'depose';
+                break;
+            case 'depose-exterieur':
+                deposeSlug = 'depose-ext';
+                break;
+            case 'depose-seule':
+                deposeSlug = 'depose-seule';
+                break;
+        }
+        if (deposeSlug) {
+            urlParts.push(deposeSlug);
+        }
     }
     
     const finalUrl = baseUrl + urlParts.join('-');
@@ -237,8 +263,21 @@ function generateBookingUrl() {
     }
     
     if (currentSelection.depose) {
-        const deposeSlug = currentSelection.depose === 'depose' ? 'depose' : 'depose-ext';
-        urlParts.push(deposeSlug);
+        let deposeSlug = '';
+        switch (currentSelection.depose) {
+            case 'depose':
+                deposeSlug = 'depose';
+                break;
+            case 'depose-exterieur':
+                deposeSlug = 'depose-ext';
+                break;
+            case 'depose-seule':
+                deposeSlug = 'depose-seule';
+                break;
+        }
+        if (deposeSlug) {
+            urlParts.push(deposeSlug);
+        }
     }
     
     return baseUrl + urlParts.join('-');
