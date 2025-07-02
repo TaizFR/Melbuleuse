@@ -1,15 +1,25 @@
 
-# Site de Réservation - Prothésie Ongulaire
+# Melbuleuse - Site de Réservation Prothésie Ongulaire
 
 ## Description
-Site web responsive pour un salon de prothésie ongulaire permettant aux clients de sélectionner leur prestation et de prendre rendez-vous facilement.
+Site web responsive et élégant pour Melbuleuse, salon de prothésie ongulaire. Le design s'inspire harmonieusement du logo papillon aux tons violets, bleus et roses, créant une expérience visuelle cohérente et raffinée.
 
 ## Fonctionnalités
+- **Logo intégré** : Affichage du logo Melbuleuse avec adaptation responsive
+- **Design harmonisé** : Palette de couleurs inspirée du logo (violets, bleus, roses)
 - **Sélection de prestations** : Gainage, Gel-X, Semi-Permanent
 - **Configuration personnalisée** : Choix du niveau de difficulté et options de dépose
 - **Calcul en temps réel** : Affichage automatique de la durée et du prix
-- **Design responsive** : Optimisé pour mobile et desktop
+- **Design responsive** : Optimisé pour mobile, tablette et desktop
 - **Redirection automatique** : Vers votre système de réservation Cal.com
+- **Animations fluides** : Transitions et effets visuels élégants
+
+## Palette de couleurs
+Le site utilise une palette inspirée du logo :
+- **Violets** : #8B5CF6, #A78BFA, #C4B5FD
+- **Bleus** : #3B82F6, #60A5FA, #93C5FD  
+- **Roses** : #EC4899, #F472B6, #F9A8D4
+- **Dégradés** : Combinaisons harmonieuses de ces couleurs
 
 ## Configuration
 
@@ -43,13 +53,20 @@ const NIVEAU_CONFIG = {
 Dans la fonction `redirectToBooking()`, modifiez l'URL de base :
 
 ```javascript
-const baseUrl = 'https://cal.com/votre-identifiant/';
+const baseUrl = 'https://cal.com/melbuleuse/';
 ```
 
 Les URLs générées suivront ce format :
-- `https://cal.com/votre-identifiant/gainage-n2-depose`
-- `https://cal.com/votre-identifiant/gel-x-n3`
+- `https://cal.com/melbuleuse/gainage-n2-depose`
+- `https://cal.com/melbuleuse/gel-x-n3`
 - etc.
+
+## Optimisations Mobile
+- **Tailles tactiles** : Boutons de minimum 48px pour faciliter la sélection
+- **Typographie responsive** : Utilisation de clamp() pour des tailles adaptatives
+- **Espacements fluides** : Marges et paddings qui s'adaptent à la taille d'écran
+- **Navigation tactile** : Interactions optimisées pour les écrans tactiles
+- **Animations réduites** : Respect des préférences utilisateur (prefers-reduced-motion)
 
 ## Hébergement
 
@@ -67,8 +84,8 @@ Les URLs générées suivront ce format :
 3. Activez GitHub Pages dans les paramètres
 
 ## Structure des fichiers
-- `index.html` - Structure HTML principale
-- `styles.css` - Styles CSS avec design responsive
+- `index.html` - Structure HTML avec intégration du logo
+- `styles.css` - Styles CSS avec design harmonisé et responsive
 - `script.js` - Logique JavaScript et calculs
 - `README.md` - Documentation
 
@@ -79,21 +96,34 @@ Les couleurs sont définies dans `:root` dans `styles.css` :
 
 ```css
 :root {
-    --primary-color: #E8B4B8;     /* Rose principal */
-    --secondary-color: #F5D2D7;   /* Rose secondaire */
-    --accent-color: #D4A5A5;      /* Rose accent */
+    --primary-purple: #8B5CF6;
+    --secondary-purple: #A78BFA;
+    --light-purple: #C4B5FD;
+    --gradient-primary: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 50%, #EC4899 100%);
     /* ... */
 }
 ```
 
-### Icônes
-Les icônes emoji peuvent être remplacées dans `index.html` :
+### Typographie
+Police principale : **Poppins** (Google Fonts)
+- Poids disponibles : 300, 400, 500, 600, 700
+- Fallback : -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto
 
-```html
-<span class="service-icon">💅</span> <!-- Gainage -->
-<span class="service-icon">✨</span> <!-- Gel-X -->
-<span class="service-icon">🌸</span> <!-- Semi-Permanent -->
-```
+### Effets visuels
+- **Ombres douces** : Utilisation de box-shadow avec les couleurs du logo
+- **Dégradés subtils** : Arrière-plans avec les couleurs harmonisées
+- **Transitions fluides** : Animations avec cubic-bezier pour plus de fluidité
+- **Backdrop-filter** : Effet de flou pour les éléments semi-transparents
+
+## Accessibilité
+- **Contraste** : Respect des standards WCAG pour la lisibilité
+- **Navigation clavier** : Tous les éléments interactifs sont accessibles
+- **ARIA labels** : Descriptions pour les lecteurs d'écran
+- **Focus visible** : Indicateurs visuels pour la navigation clavier
+- **Animations respectueuses** : Adaptation aux préférences utilisateur
 
 ## Support
 Pour toute question ou personnalisation, consultez la documentation ou contactez votre développeur.
+
+## Licence
+© 2024 Melbuleuse. Tous droits réservés.

@@ -1,5 +1,5 @@
 
-// Configuration des prestations avec prix et durées de base
+// Configuration des prestations avec prix et durées
 const SERVICES_CONFIG = {
     gainage: {
         name: 'Gainage',
@@ -16,12 +16,12 @@ const SERVICES_CONFIG = {
     'semi-permanent': {
         name: 'Semi-Permanent',
         baseDuration: 60,
-        basePrice: 30,
+        basePrice: 35,
         urlSlug: 'semi-permanent'
     }
 };
 
-// Configuration des niveaux (ajouts de temps et prix)
+// Configuration des niveaux (supplément de temps et prix)
 const NIVEAU_CONFIG = {
     '1': { duration: 0, price: 0 },
     '2': { duration: 40, price: 15 },
@@ -30,188 +30,216 @@ const NIVEAU_CONFIG = {
     '5': { duration: 100, price: 45 }
 };
 
-// Configuration des déposes
+// Configuration des options de dépose
 const DEPOSE_CONFIG = {
-    'depose': { duration: 15, price: 5, urlSlug: 'depose' },
-    'depose-exterieur': { duration: 20, price: 10, urlSlug: 'depose-ext' }
+    'depose': { duration: 15, price: 5 },
+    'depose-exterieur': { duration: 20, price: 10 }
 };
 
-// Variables globales
-let selectedService = null;
-let selectedNiveau = null;
-let selectedDepose = null;
+// État de l'application
+let currentSelection = {
+    service: null,
+    niveau: null,
+    depose: null
+};
 
-// Éléments DOM
-const serviceButtons = document.querySelectorAll('.service-btn');
-const optionsSection = document.getElementById('options');
-const niveauSelect = document.getElementById('niveau');
-const deposeSelect = document.getElementById('depose');
-const dureeDisplay = document.getElementById('duree');
-const prixDisplay = document.getElementById('prix');
-const bookingBtn = document.getElementById('bookingBtn');
-
-// Initialisation
+// Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', function() {
-    initializeEventListeners();
-    console.log('Application initialisée');
+    initializeApp();
 });
 
-function initializeEventListeners() {
-    // Événements pour les boutons de service
-    serviceButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const service = this.dataset.service;
+function initializeApp() {
+    const serviceButtons = document.querySelectorAll('.service-btn');
+    const niveauSelect = document.getElementById('niveau');
+    const deposeSelect = document.getElementById('depose');
+    const bookingBtn = document.getElementById('bookingBtn');
+
+    // Gestion des boutons de service
+    serviceButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const service = this.getAttribute('data-service');
             selectService(service);
         });
     });
 
-    // Événements pour les sélecteurs
+    // Gestion du menu niveau
     niveauSelect.addEventListener('change', function() {
-        selectedNiveau = this.value;
-        updateCalculations();
-        console.log('Niveau sélectionné:', selectedNiveau);
+        currentSelection.niveau = this.value;
+        updateSummary();
+        updateBookingButton();
     });
 
+    // Gestion du menu dépose
     deposeSelect.addEventListener('change', function() {
-        selectedDepose = this.value || null;
-        updateCalculations();
-        console.log('Dépose sélectionnée:', selectedDepose);
+        currentSelection.depose = this.value;
+        updateSummary();
+        updateBookingButton();
     });
 
-    // Événement pour le bouton de réservation
+    // Gestion du bouton de réservation
     bookingBtn.addEventListener('click', function() {
-        if (isFormValid()) {
+        if (!this.disabled) {
             redirectToBooking();
         }
     });
 }
 
 function selectService(service) {
-    selectedService = service;
-    
+    // Réinitialiser la sélection
+    currentSelection = {
+        service: service,
+        niveau: null,
+        depose: null
+    };
+
     // Mettre à jour l'interface
-    serviceButtons.forEach(btn => {
-        btn.classList.remove('active');
+    updateServiceButtons(service);
+    showOptions();
+    resetOptions();
+    updateSummary();
+    updateBookingButton();
+}
+
+function updateServiceButtons(selectedService) {
+    const serviceButtons = document.querySelectorAll('.service-btn');
+    serviceButtons.forEach(button => {
+        const service = button.getAttribute('data-service');
+        if (service === selectedService) {
+            button.classList.add('active');
+        } else {
+            button.classList.remove('active');
+        }
     });
-    
-    document.querySelector(`[data-service="${service}"]`).classList.add('active');
-    
-    // Afficher la section des options
+}
+
+function showOptions() {
+    const optionsSection = document.getElementById('options');
     optionsSection.style.display = 'block';
-    optionsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     
-    // Réinitialiser les sélections
-    resetSelections();
-    
-    console.log('Service sélectionné:', service);
+    // Animation d'apparition
+    setTimeout(() => {
+        optionsSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+        });
+    }, 100);
 }
 
-function resetSelections() {
-    selectedNiveau = null;
-    selectedDepose = null;
-    niveauSelect.value = '';
-    deposeSelect.value = '';
-    
-    updateCalculations();
+function resetOptions() {
+    document.getElementById('niveau').value = '';
+    document.getElementById('depose').value = '';
 }
 
-function updateCalculations() {
-    if (!selectedService) return;
-    
-    const service = SERVICES_CONFIG[selectedService];
+function updateSummary() {
+    const dureeElement = document.getElementById('duree');
+    const prixElement = document.getElementById('prix');
+
+    if (!currentSelection.service) {
+        dureeElement.textContent = '-- min';
+        prixElement.textContent = '-- €';
+        return;
+    }
+
+    const service = SERVICES_CONFIG[currentSelection.service];
     let totalDuration = service.baseDuration;
     let totalPrice = service.basePrice;
-    
-    // Ajouter les modifications du niveau
-    if (selectedNiveau && NIVEAU_CONFIG[selectedNiveau]) {
-        totalDuration += NIVEAU_CONFIG[selectedNiveau].duration;
-        totalPrice += NIVEAU_CONFIG[selectedNiveau].price;
-    }
-    
-    // Ajouter les modifications de la dépose
-    if (selectedDepose && DEPOSE_CONFIG[selectedDepose]) {
-        totalDuration += DEPOSE_CONFIG[selectedDepose].duration;
-        totalPrice += DEPOSE_CONFIG[selectedDepose].price;
-    }
-    
-    // Mettre à jour l'affichage avec animation
-    updateDisplayWithAnimation(dureeDisplay, `${totalDuration} min`);
-    updateDisplayWithAnimation(prixDisplay, `${totalPrice} €`);
-    
-    // Mettre à jour l'état du bouton
-    updateBookingButton();
-    
-    console.log('Calculs mis à jour - Durée:', totalDuration, 'Prix:', totalPrice);
-}
 
-function updateDisplayWithAnimation(element, newValue) {
-    element.classList.add('updating');
-    
+    // Ajouter le supplément du niveau
+    if (currentSelection.niveau && NIVEAU_CONFIG[currentSelection.niveau]) {
+        const niveauData = NIVEAU_CONFIG[currentSelection.niveau];
+        totalDuration += niveauData.duration;
+        totalPrice += niveauData.price;
+    }
+
+    // Ajouter le supplément de la dépose
+    if (currentSelection.depose && DEPOSE_CONFIG[currentSelection.depose]) {
+        const deposeData = DEPOSE_CONFIG[currentSelection.depose];
+        totalDuration += deposeData.duration;
+        totalPrice += deposeData.price;
+    }
+
+    // Animation de mise à jour
+    dureeElement.classList.add('updating');
+    prixElement.classList.add('updating');
+
     setTimeout(() => {
-        element.textContent = newValue;
-        element.classList.remove('updating');
+        dureeElement.textContent = `${totalDuration} min`;
+        prixElement.textContent = `${totalPrice} €`;
+        
+        setTimeout(() => {
+            dureeElement.classList.remove('updating');
+            prixElement.classList.remove('updating');
+        }, 150);
     }, 150);
 }
 
-function isFormValid() {
-    return selectedService && selectedNiveau;
-}
-
 function updateBookingButton() {
-    const isValid = isFormValid();
+    const bookingBtn = document.getElementById('bookingBtn');
+    
+    // Le bouton est activé si un service et un niveau sont sélectionnés
+    const isValid = currentSelection.service && currentSelection.niveau;
+    
     bookingBtn.disabled = !isValid;
     
     if (isValid) {
-        bookingBtn.style.opacity = '1';
-        bookingBtn.style.cursor = 'pointer';
+        bookingBtn.classList.add('active');
     } else {
-        bookingBtn.style.opacity = '0.5';
-        bookingBtn.style.cursor = 'not-allowed';
+        bookingBtn.classList.remove('active');
     }
 }
 
 function redirectToBooking() {
-    if (!isFormValid()) {
-        console.error('Formulaire invalide');
+    if (!currentSelection.service || !currentSelection.niveau) {
         return;
     }
+
+    // Construire l'URL pour Cal.com
+    const baseUrl = 'https://cal.com/melbuleuse/'; // Remplacez par votre identifiant Cal.com
+    const service = SERVICES_CONFIG[currentSelection.service];
     
-    // Construire l'URL de redirection
-    const baseUrl = 'https://cal.com/monid/'; // À personnaliser
-    const service = SERVICES_CONFIG[selectedService].urlSlug;
-    const niveau = `n${selectedNiveau}`;
-    const depose = selectedDepose ? `-${DEPOSE_CONFIG[selectedDepose].urlSlug}` : '';
+    let urlParts = [service.urlSlug];
     
-    const finalUrl = `${baseUrl}${service}-${niveau}${depose}`;
+    // Ajouter le niveau
+    if (currentSelection.niveau) {
+        urlParts.push(`n${currentSelection.niveau}`);
+    }
     
-    console.log('Redirection vers:', finalUrl);
+    // Ajouter la dépose si sélectionnée
+    if (currentSelection.depose) {
+        const deposeSlug = currentSelection.depose === 'depose' ? 'depose' : 'depose-ext';
+        urlParts.push(deposeSlug);
+    }
     
-    // Effet visuel sur le bouton
-    bookingBtn.style.transform = 'scale(0.95)';
+    const finalUrl = baseUrl + urlParts.join('-');
     
-    setTimeout(() => {
-        // Redirection vers Cal.com
-        window.open(finalUrl, '_blank');
-        
-        // Réinitialiser le bouton
-        bookingBtn.style.transform = 'scale(1)';
-    }, 200);
+    // Redirection vers Cal.com
+    window.open(finalUrl, '_blank');
 }
 
-// Fonctions utilitaires pour le debugging
-function getCurrentSelection() {
-    return {
-        service: selectedService,
-        niveau: selectedNiveau,
-        depose: selectedDepose,
-        isValid: isFormValid()
-    };
+// Fonction utilitaire pour le debug (optionnelle)
+function logCurrentSelection() {
+    console.log('Sélection actuelle:', currentSelection);
+    console.log('URL générée:', generateBookingUrl());
 }
 
-// Exposer pour le debugging en console
-window.debugBooking = {
-    getCurrentSelection,
-    SERVICES_CONFIG,
-    NIVEAU_CONFIG,
-    DEPOSE_CONFIG
-};
+function generateBookingUrl() {
+    if (!currentSelection.service || !currentSelection.niveau) {
+        return null;
+    }
+
+    const baseUrl = 'https://cal.com/melbuleuse/';
+    const service = SERVICES_CONFIG[currentSelection.service];
+    
+    let urlParts = [service.urlSlug];
+    
+    if (currentSelection.niveau) {
+        urlParts.push(`n${currentSelection.niveau}`);
+    }
+    
+    if (currentSelection.depose) {
+        const deposeSlug = currentSelection.depose === 'depose' ? 'depose' : 'depose-ext';
+        urlParts.push(deposeSlug);
+    }
+    
+    return baseUrl + urlParts.join('-');
+}
