@@ -3,9 +3,11 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0">
     <title>Prothésie Ongulaire - Réservation</title>
     <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="Prenez rendez-vous facilement pour vos prestations de prothésie ongulaire : Gainage, Gel-X, Semi-Permanent">
+    <meta name="theme-color" content="#E8B4B8">
 </head>
 <body>
     <div class="container">
@@ -19,28 +21,28 @@
             <section class="service-selection">
                 <h2>Choisissez votre prestation</h2>
                 <div class="service-buttons">
-                    <button class="service-btn" data-service="gainage">
-                        <span class="service-icon">💅</span>
+                    <button class="service-btn" data-service="gainage" aria-label="Sélectionner le service Gainage">
+                        <span class="service-icon" aria-hidden="true">💅</span>
                         <span class="service-name">Gainage</span>
                     </button>
-                    <button class="service-btn" data-service="gel-x">
-                        <span class="service-icon">✨</span>
+                    <button class="service-btn" data-service="gel-x" aria-label="Sélectionner le service Gel-X">
+                        <span class="service-icon" aria-hidden="true">✨</span>
                         <span class="service-name">Gel-X</span>
                     </button>
-                    <button class="service-btn" data-service="semi-permanent">
-                        <span class="service-icon">🌸</span>
+                    <button class="service-btn" data-service="semi-permanent" aria-label="Sélectionner le service Semi-Permanent">
+                        <span class="service-icon" aria-hidden="true">🌸</span>
                         <span class="service-name">Semi-Permanent</span>
                     </button>
                 </div>
             </section>
 
             <!-- Options de configuration -->
-            <section class="options-section" id="options" style="display: none;">
+            <section class="options-section" id="options" style="display: none;" aria-live="polite">
                 <h3>Personnalisez votre prestation</h3>
                 
                 <div class="option-group">
                     <label for="niveau">Niveau de difficulté</label>
-                    <select id="niveau" class="select-field">
+                    <select id="niveau" class="select-field" aria-describedby="niveau-help">
                         <option value="">Sélectionnez un niveau</option>
                         <option value="1">Niveau 1</option>
                         <option value="2">Niveau 2</option>
@@ -52,7 +54,7 @@
 
                 <div class="option-group">
                     <label for="depose">Options de dépose</label>
-                    <select id="depose" class="select-field">
+                    <select id="depose" class="select-field" aria-describedby="depose-help">
                         <option value="">Aucune dépose</option>
                         <option value="depose">Dépose</option>
                         <option value="depose-exterieur">Dépose Extérieur</option>
@@ -60,20 +62,20 @@
                 </div>
 
                 <!-- Récapitulatif -->
-                <div class="summary-card">
+                <div class="summary-card" role="region" aria-label="Récapitulatif de votre sélection">
                     <div class="summary-item">
                         <span class="summary-label">Durée estimée :</span>
-                        <span class="summary-value" id="duree">-- min</span>
+                        <span class="summary-value" id="duree" aria-live="polite">-- min</span>
                     </div>
                     <div class="summary-item">
                         <span class="summary-label">Prix estimé :</span>
-                        <span class="summary-value" id="prix">-- €</span>
+                        <span class="summary-value" id="prix" aria-live="polite">-- €</span>
                     </div>
                 </div>
 
                 <!-- Bouton de réservation -->
-                <button class="booking-btn" id="bookingBtn" disabled>
-                    <span class="btn-icon">📅</span>
+                <button class="booking-btn" id="bookingBtn" disabled aria-describedby="booking-help">
+                    <span class="btn-icon" aria-hidden="true">📅</span>
                     Prendre Rendez-vous
                 </button>
             </section>
