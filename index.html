@@ -80,8 +80,18 @@
                     <label for="depose">Options de dépose (optionnel)</label>
                     <select id="depose" class="select-field" aria-describedby="depose-help">
                         <option value="">Aucune dépose</option>
-                        <option value="depose">Dépose (+5€)</option>
-                        <option value="depose-exterieur">Dépose Extérieur (+5€)</option>
+                        <option value="depose">Dépose Melbuleuse (+30 min, +5€)</option>
+                        <option value="depose-exterieur">Dépose Extérieur (+45 min, +5€)</option>
+                    </select>
+                </div>
+
+                <!-- Options spéciales pour dépose seule -->
+                <div class="option-group" id="depose-seule-group" style="display: none;">
+                    <label for="depose-seule-type">Type de dépose (obligatoire)</label>
+                    <select id="depose-seule-type" class="select-field" required>
+                        <option value="">Sélectionnez le type</option>
+                        <option value="melbuleuse">Dépose Melbuleuse (30 min)</option>
+                        <option value="exterieur">Dépose Extérieur (45 min)</option>
                     </select>
                 </div>
 
@@ -90,6 +100,10 @@
                     <div class="summary-item">
                         <span class="summary-label">Prix total :</span>
                         <span class="summary-value" id="prix" aria-live="polite">-- €</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Durée estimée :</span>
+                        <span class="summary-value" id="duree" aria-live="polite">--</span>
                     </div>
                 </div>
 

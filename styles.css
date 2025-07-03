@@ -150,8 +150,6 @@ body {
     text-align: center;
 }
 
-/* ... keep existing code (service button styles and hover effects) */
-
 .service-btn::before {
     content: '';
     position: absolute;
@@ -240,8 +238,6 @@ body {
     }
 }
 
-/* ... keep existing code (options section styles, form elements, summary card, booking button, footer, media queries, animations) */
-
 .options-section h3 {
     text-align: center;
     margin-bottom: clamp(1.25rem, 3vw, 1.5rem);
@@ -307,10 +303,11 @@ body {
     padding: clamp(1.125rem, 3vw, 1.5rem);
     margin: clamp(1.25rem, 3vw, 1.5rem) 0;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     width: 100%;
     box-shadow: var(--shadow-soft);
+    gap: 1rem;
 }
 
 .summary-item {
@@ -318,6 +315,7 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    flex: 1;
 }
 
 .summary-label {
@@ -429,6 +427,15 @@ body {
         font-size: 1rem;
         padding: 1rem 2.5rem 1rem 1rem;
     }
+    
+    .summary-card {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .summary-item {
+        width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
@@ -458,6 +465,8 @@ body {
     
     .summary-card {
         padding: 1.125rem;
+        flex-direction: column;
+        gap: 1rem;
     }
 }
 
