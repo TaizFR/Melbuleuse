@@ -74,7 +74,7 @@ const NIVEAU_CONFIG = {
 // Configuration des options de dépose
 const DEPOSE_CONFIG = {
     'depose': { price: 5, time: 30 },
-    'depose-exterieur': { price: 5, time: 45 }
+    'depose-exterieur': { price: 10, time: 45 }
 };
 
 // État de l'application
