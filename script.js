@@ -123,13 +123,13 @@ const BOOKING_URLS = {
     'gel-x-sml-n2-depose': 'https://cal.com/melbuleuse/pose-gel-x-s-m-l-niveau-2-depose',
     'gel-x-sml-n2-depose-exterieur': '',
     'gel-x-sml-n3-nodepose': '',
-    'gel-x-sml-n3-depose': '',
+    'gel-x-sml-n3-depose': 'https://cal.com/melbuleuse/gel-x-sml-n3-depose',
     'gel-x-sml-n3-depose-exterieur': '',
     'gel-x-sml-n4-nodepose': '',
-    'gel-x-sml-n4-depose': '',
+    'gel-x-sml-n4-depose': 'https://cal.com/melbuleuse/pose-gel-x-s-m-l-niveau-4-et-depose',
     'gel-x-sml-n4-depose-exterieur': '',
     'gel-x-sml-n5-nodepose': '',
-    'gel-x-sml-n5-depose': '',
+    'gel-x-sml-n5-depose': 'https://cal.com/melbuleuse/pose-gel-x-s-m-l-niveau-5-et-depose',
     'gel-x-sml-n5-depose-exterieur': '',
 
     // GEL-X XL
