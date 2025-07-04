@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
 <body>
     <div class="container">
@@ -77,7 +78,7 @@
                 </div>
 
                 <div class="option-group" id="depose-group">
-                    <label for="depose">Options de dépose (optionnel)</label>
+                    <label for="depose">Options de dépose (Veillez à bien indiquer)</label>
                     <select id="depose" class="select-field" aria-describedby="depose-help">
                         <option value="">Aucune dépose</option>
                         <option value="depose">Dépose Melbuleuse (+30 min, +5€)</option>
@@ -87,11 +88,8 @@
 
                 <!-- Options spéciales pour dépose seule -->
                 <div class="option-group" id="depose-seule-group" style="display: none;">
-                    <label for="depose-seule-type">Type de dépose (obligatoire)</label>
                     <select id="depose-seule-type" class="select-field" required>
-                        <option value="">Sélectionnez le type</option>
-                        <option value="melbuleuse">Dépose Melbuleuse (30 min)</option>
-                        <option value="exterieur">Dépose Extérieur (45 min)</option>
+                        <option value="melbuleuse" selected>Dépose Melbuleuse (30 min)</option>
                     </select>
                 </div>
 
@@ -116,7 +114,7 @@
         </main>
 
         <footer class="footer">
-            <p>&copy; 2024 Melbuleuse. Tous droits réservés.</p>
+            <p>&copy; 2025 Melbuleuse. Tous droits réservés.</p>
         </footer>
     </div>
 

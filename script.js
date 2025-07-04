@@ -210,6 +210,16 @@ function updateOptionsVisibility(service) {
     if (service === 'depose-seule') {
         // Pour la dépose seule, afficher uniquement le type de dépose
         deposeSeuleGroup.style.display = 'block';
+
+        // Pré-sélectionner la valeur par défaut
+        currentSelection.deposeSeuleType = 'melbuleuse';
+        document.getElementById('depose-seule-type').value = 'melbuleuse';
+        
+        // Mettre à jour le résumé et le bouton
+        updateSummary();
+        updateBookingButton();
+    
+
     } else {
         // Pour les autres prestations
         if (serviceConfig.requiresTaille) {
