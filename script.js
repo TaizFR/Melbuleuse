@@ -150,8 +150,7 @@ const BOOKING_URLS = {
     'gel-x-xl-n5-depose-exterieur': '',
 
     // DEPOSE SEULE
-    'depose-seule-melbuleuse': '',
-    'depose-seule-exterieur': ''
+    'depose-seule-melbuleuse': 'https://cal.com/melbuleuse/depose-seule',
 };
 
 // =====================
